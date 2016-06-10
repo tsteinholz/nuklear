@@ -67,8 +67,7 @@ nk_sfml_scissor(SDL_Surface *surface, float x, float y, float w, float h)
 }
 
 static void
-nk
-stroke_line(SDL_Surface *surface, short x0, short y0, short x1,
+nk_sfml_stroke_line(SDL_Surface *surface, short x0, short y0, short x1,
     short y1, unsigned int line_thickness, struct nk_color col)
 {
     thickLineRGBA(surface, x0, y0, x1, y1, line_thickness, col.r, col.g, col.b, col.a);
@@ -392,34 +391,70 @@ nk_sfml_handle_event(sf::Event *evt)
 {
     struct nk_context *ctx = &sfml.ctx;
     switch (evt->type) {
-        case KeyPressed:
-        case KeyReleased:
+        case sf::Event::KeyPressed:
+        case sf::Event::KeyReleased:
+            int down = evt->type == sf::Event::KeyPressed;
+            switch (evt->type.key.code) {
+                case sf::Keyboard::RShift:
+                case sf::Keyboard::LShift:
+                    nk_input_key(ctx, NK_KEY_SHIFT, down);
+                    break;
+                case sf::Keyboard::Delete:
+                    nk_input_key(ctx, NK_KEY_DEL, down);
+                    break;
+                case sf::Keyboard::Return:
+                    nk_input_key(ctx, NK_KEY_ENTER, down);
+                    break;
+                case sf::Keyboard::Tab
+                    nk_input_key(ctx, NK_KEY_TAB, down);
+                    break;
+                case sf::Keyboard::Left
+                    nk_input_key(ctx, NK_KEY_LEFT, down);
+                    break;
+                case sf::Keyboard::Right:
+                    nk_input_key(ctx, NK_KEY_RIGHT, down);
+                    break;
+                case sf::Keyboard::Backspace:
+                    nk_input_key(ctx, NK_KEY_BACKSPACE, down);
+                    break;
+                case sf::Keyboard::Home:
+                    nk_input_key(ctx, NK_KEY_TEXT_START, down);
+                    break;
+                case sf::Keyboard::End:
+                    nk_input_key(ctx, NK_KEY_TEXT_END, down);
+                    break;
+                case sf::Keyboard::Space
+                    if (!down) nk_input_char(ctx, ' ');
+                    break;
+                default:
+
+                    break;
+            }
+            break;
+        case sf::Event::MouseButtonPressed:
+        case sf::Event::MouseButtonReleased:
 
             break;
-        case MouseButtonPressed:
-        case MouseButtonReleased:
-
-            break;
-        case Closed:
-        case Resized:
-        case LostFocus:
-        case GainedFocus:
-        case TextEntered:
-        case MouseWheelMoved:
-        case MouseWheelScrolled:
-        case MouseMoved:
-        case MouseEntered:
-        case MouseLeft:
-        case JoystickButtonPressed:
-        case JoystickButtonReleased:
-        case JoystickMoved:
-        case JoystickConnected:
-        case JoystickDisconnected:
-        case TouchBegan:
-        case TouchMoved:
-        case TouchEnded:
-        case SensorChanged:
-        case Count:
+        case sf::Event::Closed:
+        case sf::Event::Resized:
+        case sf::Event::LostFocus:
+        case sf::Event::GainedFocus:
+        case sf::Event::TextEntered:
+        case sf::Event::MouseWheelMoved:
+        case sf::Event::MouseWheelScrolled:
+        case sf::Event::MouseMoved:
+        case sf::Event::MouseEntered:
+        case sf::Event::MouseLeft:
+        case sf::Event::JoystickButtonPressed:
+        case sf::Event::JoystickButtonReleased:
+        case sf::Event::JoystickMoved:
+        case sf::Event::JoystickConnected:
+        case sf::Event::JoystickDisconnected:
+        case sf::Event::TouchBegan:
+        case sf::Event::TouchMoved:
+        case sf::Event::TouchEnded:
+        case sf::Event::SensorChanged:
+        case sf::Event::Count:
         default: break;
     }
 
